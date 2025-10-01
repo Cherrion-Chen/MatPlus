@@ -1,8 +1,9 @@
 User:
-g++ -std=c++11 test.cpp -L. -lMatPlus -o test
+g++ -std=c++11 your_file.cpp -L. -lMatPlus -o test
 
 Developer:
 mkdir build
 cd build
 g++ -std=c++11 -c ..\Mat.cpp ..\utils.cpp ..\extension.cpp
+
 ar rcs libMatPlus.a *.o
