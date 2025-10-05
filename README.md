@@ -6,6 +6,6 @@ Later, we may provide further functions to prove its performance in solving comp
 
 # Instructions
 
-The math core has been precompiled, so you can compile your file as following (which is written in the "Compilation Instruction.txt"):
+The math core has been compiled into a static link library, so you can compile your file as following (which is written in the "Compilation Instruction.txt"):
 
 g++ -std=c++11 your_file.cpp -L. -lMatPlus -o test
