@@ -3,10 +3,11 @@
 
 #include "Mat.hpp"
 #include <vector>
-//using namespace std;
+#include <functional>
+using namespace std;
 
 Mat operator^(const Mat &A, int n);
-Mat map(double (*f)(double), Mat A);
+Mat apply_func(function<double(double)> f, Mat A);
 Mat row_vector(int n, double *arr);
 Mat column_vector(int n, double *arr);
 Mat diag(int n, double *arr);

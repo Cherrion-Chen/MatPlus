@@ -5,6 +5,7 @@ Block matrix.
 
 #include "extension.hpp"
 #include <stdlib.h>
+#include <functional>
 #include <vector>
 #include <iostream>
 using namespace std;
@@ -15,7 +16,7 @@ Mat operator^(const Mat &A, int n) {
 	return op;
 }
 
-Mat map(double (*f)(double x), Mat A) {
+Mat apply_func(function<double(double)> f, Mat A) {
 	Mat op(A.rows, A.columns);
 	for (int i = 0; i < A.rows*A.columns; ++i) op[i] = f(A[i]);
 	return op;

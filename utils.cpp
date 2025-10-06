@@ -36,30 +36,52 @@ pos find_max(Mat A, int row_start, int column_start, int row_end, int column_end
 
 mat_tuple LUPQ(Mat A) {
 	mat_tuple op;
-	op.L = zeros_like(A), op.U = A, op.P = eye(A.rows), op.Q = eye(A.columns); op.n = 0;
+	
+	op.L = zeros(A.rows, A.rows);  // L 是 m×m 单位下三角矩阵
+	op.U = A;  // U 是 m×n 上三角矩阵
+	op.P = eye(A.rows);
+	op.Q = eye(A.columns);
+	op.n = 0;
 	
 	pos maxpos;
-	for (int i = 0; i < A.rows-1; ++i) {
+	for (int i = 0; i < min(A.rows, A.columns)-1; ++i) {
 		maxpos = find_max(abs(op.U), i, i);
-		if ((maxpos.row != i) || (maxpos.column !=i)) {
+		
+		if (maxpos.row != i) {
 			op.U.swap_row(i, maxpos.row);
-			op.U.swap_column(i, maxpos.column);
 			op.L.swap_row(i, maxpos.row);
 			op.P.swap_row(i, maxpos.row);
+			++op.n;
+		}
+		if (maxpos.column != i) {
+			op.U.swap_column(i, maxpos.column);
 			op.Q.swap_column(i, maxpos.column);
 			++op.n;
 		}
-	
+		
 		op.L(i, i) = 1;
-		for (int j = i+1; j < A.columns; ++j) {
-			op.L(j, i) = op.U(j, i) / op.U(i, i);
-			for (int k = i; k < A.columns; ++k)
-				op.U(j, k) -= op.L(j, i) * op.U(i, k);
+		if (abs(op.U(i, i)) > 1e-16) {
+			for (int j = i+1; j < A.rows; ++j) {
+				op.L(j, i) = op.U(j, i) / op.U(i, i);
+				for (int k = i; k < A.columns; ++k)
+					op.U(j, k) -= op.L(j, i) * op.U(i, k);
+			}
 		}
 	}
 	op.L(A.rows-1, A.rows-1) = 1;
 	
 	return op;
+}
+
+double det(Mat A) {
+	mat_tuple op = LUPQ(A);
+	
+	double d = 1;
+	for (int i = 0; i < A.rows; ++i) 
+		d *= op.U(i, i);
+	
+	if (op.n % 2) d = -d;
+	return d;
 }
 
 Mat L_solve(Mat L, Mat y) {
@@ -96,14 +118,6 @@ Mat solve(Mat A, Mat y) {
 	x = L_solve(MT.L, MT.P*y);
 	x = MT.Q * U_solve(MT.U, x);
 	return x;
-}
-
-double det(Mat A) {
-	mat_tuple op = LUPQ(A);
-	double d = 1;
-	for (int i = 0; i < A.rows; ++i) d *= op.U(i, i);
-	if (op.n % 2) d = -d;
-	return d;
 }
 
 mat_tuple QR(Mat A) {

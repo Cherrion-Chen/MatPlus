@@ -46,6 +46,9 @@ public:
 	double &operator()(int row, int column) {
 		return mem[columns*row + column];
 	}
+	const double &operator()(int row, int column) const {
+		return mem[columns*row + column];
+	}
 	double &operator[](int n) {
 		return mem[n];
 	}
@@ -74,16 +77,22 @@ public:
 	
 	friend ostream &operator<<(ostream &os, const Mat &mat) {
 		for (int r = 0; r < mat.rows; ++r) {
-			for (int c = 0; c < mat.columns; ++c) cout << mat.mem[mat.columns*r + c] << " ";
-			cout << endl;
+			for (int c = 0; c < mat.columns-1; ++c) os << mat.mem[mat.columns*r + c] << ", ";
+			os << mat.mem[mat.columns*r + mat.columns-1] << endl;
 		}
 		return os;
 	}
 	
 	friend Mat operator+(const Mat &A, const Mat &B);
+	friend Mat operator+(double s, const Mat &A);
+	friend Mat operator+(const Mat &A, double s);
 	friend Mat operator-(const Mat &A, const Mat &B);
+	friend Mat operator-(const Mat& A);
+	friend Mat operator-(double s, const Mat &A);
+	friend Mat operator-(const Mat &A, double s);
 	friend Mat operator*(const Mat &A, const Mat &B);
 	friend Mat operator*(double a, const Mat &B);
+	friend Mat operator*(const Mat& A, double s);
 	
 	int rows, columns;
 private:

@@ -11,7 +11,6 @@ using namespace std;
 
 Mat transpose(Mat M) {
 	Mat op(M.columns, M.rows);
-	double temp;
 	for (int i = 0; i < M.rows; ++i) {
 		for (int j = 0; j < M.columns; ++j) {
 			op.mem[op.columns*i + j] = M.mem[M.columns*j + i];
@@ -42,10 +41,32 @@ Mat operator+(const Mat &A, const Mat &B) {
 	return op;
 }
 
+Mat operator+(double s, const Mat &A) {
+	Mat op(A.rows, A.columns);
+	for (int i = 0; i < A.rows*A.columns; ++i) op.mem[i] = A.mem[i] + s;
+	return op;
+}
+
+Mat operator+(const Mat &A, double s) {
+	return s + A;
+}
+
 Mat operator-(const Mat &A, const Mat &B) {
 	Mat op(A.rows, A.columns);
 	for (int i = 0; i < A.rows*A.columns; ++i) op.mem[i] = A.mem[i] - B.mem[i];
 	return op;
+}
+
+Mat operator-(const Mat& A) {
+	return (-1.) * A;
+}
+
+Mat operator-(double s, const Mat &A) {
+	return s + (-A);
+}
+
+Mat operator-(const Mat &A, double s) {
+	return (-s) + A;
 }
 
 Mat operator*(const Mat &A, const Mat &B) {
@@ -61,9 +82,13 @@ Mat operator*(const Mat &A, const Mat &B) {
 	return op;
 }
 
-Mat operator*(double a, const Mat &B) {
-	Mat op(B.rows, B.columns);
-	for (int i = 0; i < B.rows*B.columns; ++i) op.mem[i] = a * B.mem[i];
+Mat operator*(double a, const Mat &A) {
+	Mat op(A.rows, A.columns);
+	for (int i = 0; i < A.rows*A.columns; ++i) op.mem[i] = a * A.mem[i];
 	return op;
+}
+
+Mat operator*(const Mat& A, double s) {
+	return s * A;
 }
 
