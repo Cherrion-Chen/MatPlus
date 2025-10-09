@@ -11,9 +11,9 @@ using namespace std;
 
 Mat transpose(Mat M) {
 	Mat op(M.columns, M.rows);
-	for (int i = 0; i < M.rows; ++i) {
-		for (int j = 0; j < M.columns; ++j) {
-			op.mem[op.columns*i + j] = M.mem[M.columns*j + i];
+	for (int i = 0; i < op.rows; ++i) {
+		for (int j = 0; j < op.columns; ++j) {
+			op(i, j) = M(j, i);
 		}
 	}
 	return op;
@@ -70,10 +70,10 @@ Mat operator-(const Mat &A, double s) {
 }
 
 Mat operator*(const Mat &A, const Mat &B) {
-	Mat op = zeros(A.rows, A.columns);
+	Mat op = zeros(A.rows, B.columns);
 	double sum;
-	for (int i = 0; i < A.rows; ++i) {
-		for (int j = 0; j < B.columns; ++j) {
+	for (int i = 0; i < op.rows; ++i) {
+		for (int j = 0; j < op.columns; ++j) {
 			sum = 0;
 			for (int k = 0; k < A.columns; ++k) sum += A.mem[A.columns*i + k] * B.mem[B.columns*k + j];
 			op.mem[op.columns*i + j] = sum;
